@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 80 80" role="img" aria-label="podglad">
+  <defs>
+    <radialGradient id="background" cx="45%" cy="45%" r="65%"><stop stop-color="#f4f7fe"/><stop offset="1" stop-color="#eaf0fb"/></radialGradient>
+  </defs>
+  <circle cx="40" cy="40" r="39" fill="url(#background)"/>
+  <g fill="none" stroke="#1d5bc8" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M19.5 40c6.2-8.5 13-12.7 20.5-12.7S54.3 31.5 60.5 40c-6.2 8.5-13 12.7-20.5 12.7S25.7 48.5 19.5 40Z"/>
+      <circle cx="40" cy="40" r="7.5"/>
+    
+  </g>
+</svg>

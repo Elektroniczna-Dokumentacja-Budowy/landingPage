@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 32 32" role="img" aria-label="Czas odpowiedzi">
+  <g fill="none" stroke="#283460" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="16" cy="17" r="11"/>
+    <path d="M16 10v7l4.3 2.2M16 4v2"/>
+  </g>
+</svg>

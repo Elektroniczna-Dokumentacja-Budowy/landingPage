@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 80 80" role="img" aria-label="Telefon">
+  <defs><radialGradient id="bg" cx="45%" cy="42%" r="65%"><stop stop-color="#f4f7fe"/><stop offset="1" stop-color="#e9effb"/></radialGradient></defs>
+  <circle cx="40" cy="40" r="39" fill="url(#bg)"/>
+  <path d="M27 21h8l4 12-6 4c4 8 7 11 15 15l4-6 12 4v8c0 3-2 5-5 5C38 61 19 42 22 26c0-3 2-5 5-5Z" fill="none" stroke="#1d5bc9" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

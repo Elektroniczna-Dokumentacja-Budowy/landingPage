@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 80 80" role="img" aria-label="Skalowanie">
+  <defs><radialGradient id="bg" cx="45%" cy="42%" r="65%"><stop stop-color="#f4f7fe"/><stop offset="1" stop-color="#e9effb"/></radialGradient></defs>
+  <circle cx="40" cy="40" r="39" fill="url(#bg)"/>
+  <g fill="none" stroke="#1d5bc9" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M31 46c6-15 17-24 30-26 1 13-8 24-24 30l-6-4Z"/>
+    <path d="m33 40-8.5 3.2-5.2 8 10.9-.8M42 48l-1 11 8-5.2 2.8-9M31 46l6 4"/>
+    <circle cx="49" cy="33" r="3.8"/>
+    <path d="M29 51c-5 1-8 5-8 10 5 0 9-3 10-8"/>
+  </g>
+</svg>

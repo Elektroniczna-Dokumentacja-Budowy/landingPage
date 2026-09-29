@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 64 64" role="img" aria-label="Archiwum inwestycji">
+  <g fill="none" stroke="#1d5bc9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 25v28a3 3 0 0 0 3 3h34a3 3 0 0 0 3-3V25"/>
+    <rect x="8" y="16" width="48" height="9" rx="2"/>
+    <circle cx="32" cy="40" r="9"/>
+    <path d="M32 34.5v6l4 2.5"/>
+  </g>
+</svg>

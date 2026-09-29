@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 64 64" role="img" aria-label="Budżet i rozliczenia">
+  <g fill="none" stroke="#1d5bc9" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="10" y="8" width="27" height="48" rx="3"/>
+    <rect x="16" y="15" width="15" height="10" rx="1"/>
+    <path d="M17 34h3M27 34h3M17 42h3M27 42h3M17 50h3M27 50h3"/>
+    <circle cx="47" cy="43" r="11"/>
+    <path d="M42 39h6l-6 8h6M51 37v10M49 44h4"/>
+  </g>
+</svg>

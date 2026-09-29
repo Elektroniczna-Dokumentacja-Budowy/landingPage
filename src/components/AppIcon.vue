@@ -15,6 +15,11 @@ defineProps({ name: String, size: { type: Number, default: 28 } })
     <template v-else-if="name === 'document'"><path d="M6 2h9l4 4v16H6z"/><path d="M14 2v5h5M9 13h6M9 17h6"/></template>
     <template v-else-if="name === 'report'"><path d="M4 3h16v18H4zM8 17v-4M12 17V8M16 17v-7"/></template>
     <template v-else-if="name === 'check'"><circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 6-7"/></template>
+    <template v-else-if="name === 'lock'"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/></template>
+    <template v-else-if="name === 'rocket'"><path d="M14 5c3-3 6-3 6-3s0 3-3 6l-5 5-4-4 6-4Z"/><path d="m8 9-4 1-2 2 5 1M12 13l-1 5-2 2-1-5M15 9l-3-3"/><path d="M5 16c-2 1-2 3-2 3s2 0 3-2"/></template>
+    <template v-else-if="name === 'handshake'"><path d="m8 12 3 3a2 2 0 0 0 3 0l5-5"/><path d="m3 10 4-4 4 1 2-1 4 1 4 4-6 6a2 2 0 0 1-3 0l-5-5-4 4-2-6 2-2Z"/></template>
+    <template v-else-if="name === 'light'"><path d="M9 18h6M10 22h4"/><path d="M8 14a7 7 0 1 1 8 0c-1 1-1 2-1 2H9s0-1-1-2Z"/></template>
+    <template v-else-if="name === 'code'"><path d="m8 9-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/></template>
     <template v-else><path d="M9 3h6v3h4v15H5V6h4zM9 12h6M9 16h4"/></template>
   </svg>
 </template>

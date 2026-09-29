@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 80 80" role="img" aria-label="Wiadomość e-mail">
+  <defs><radialGradient id="bg" cx="45%" cy="42%" r="65%"><stop stop-color="#f4f7fe"/><stop offset="1" stop-color="#e9effb"/></radialGradient></defs>
+  <circle cx="40" cy="40" r="39" fill="url(#bg)"/>
+  <g fill="none" stroke="#1d5bc9" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="18" y="25" width="44" height="32" rx="4"/>
+    <path d="m20 29 20 15 20-15"/>
+  </g>
+</svg>

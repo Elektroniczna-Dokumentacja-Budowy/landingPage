@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 80 80" role="img" aria-label="Pomysł">
+  <defs><radialGradient id="bg" cx="45%" cy="42%" r="65%"><stop stop-color="#f4f7fe"/><stop offset="1" stop-color="#e9effb"/></radialGradient></defs>
+  <circle cx="40" cy="40" r="39" fill="url(#bg)"/>
+  <g fill="none" stroke="#1d5bc9" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M40 20c-9.4 0-16.5 7-16.5 16.1 0 6 3 10.1 7.4 14.5 1.6 1.6 2.3 3 2.3 5.2h13.6c0-2.2.7-3.6 2.3-5.2 4.4-4.4 7.4-8.5 7.4-14.5C56.5 27 49.4 20 40 20Z"/>
+    <path d="M33.2 55.8h13.6v3.3a4 4 0 0 1-4 4h-5.6a4 4 0 0 1-4-4v-3.3Z"/>
+    <circle cx="40" cy="39" r="1.6" fill="#1d5bc9" stroke="none"/>
+  </g>
+</svg>
