@@ -1,106 +1,66 @@
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import AppIcon from './AppIcon.vue'
 import DashboardMockup from './DashboardMockup.vue'
 import LogoMark from './LogoMark.vue'
-import calendarIcon from '../assets/images/02-kalendarz.svg'
-import folderIcon from '../assets/images/01-folder.svg'
+import folderIcon from '../assets/images/icons/01-folder.svg'
+import { useI18n } from '../i18n.js'
 
-const menuOpen = ref(false)
 const annual = ref(false)
-const nav = [['Funkcje','/funkcje'],['Dla inwestora','/dla-inwestora'],['Dla wykonawcy','/dla-wykonawcy'],['Cennik','/cennik'],['Blog','/#blog'],['O nas','/o-nas'],['Kontakt','/kontakt']]
-
-const plans = [
-  {name:'START',subtitle:'Dla inwestorów indywidualnych',monthly:39,yearly:31,description:'Idealny do budowy domu lub mniejszej inwestycji',features:['1 aktywna inwestycja','Nieograniczeni użytkownicy','Dokumenty i plany','Dziennik budowy (zdjęcia)','Komunikator','Harmonogram i zadania','Budżet i koszty','Raporty podstawowe'],support:'Priorytetowe wsparcie'},
-  {name:'PRO',subtitle:'Dla wymagających inwestorów i małych firm',monthly:79,yearly:63,description:'Więcej możliwości i pełna kontrola wielu inwestycji',featured:true,features:['Do 5 aktywnych inwestycji','Nieograniczeni użytkownicy','Wszystko z planu START','Raporty zaawansowane','Eksport danych (PDF, Excel)','Akceptacje etapów i protokoły','Role i uprawnienia'],support:'Priorytetowe wsparcie e-mail'},
-  {name:'BUSINESS',subtitle:'Dla firm budowlanych i deweloperów',monthly:149,yearly:119,description:'Zaawansowane zarządzanie i pełne bezpieczeństwo danych',features:['Nieograniczona liczba inwestycji','Nieograniczeni użytkownicy','Wszystko z planu PRO','Zaawansowane uprawnienia i role','Integracje i API (wkrótce)','Indywidualne szkolenie','Dedykowany opiekun'],support:'Priorytetowe wsparcie telefoniczne'},
-]
-
-const comparison = [
-  ['calendar','Aktywne inwestycje','1','do 5','bez limitu'],
-  ['users','Nieograniczeni użytkownicy','✓','✓','✓'],
-  ['folder','Dokumenty i plany','✓','✓','✓'],
-  ['camera','Dziennik budowy (zdjęcia)','✓','✓','✓'],
-  ['chat','Komunikator','✓','✓','✓'],
-  ['calendar','Harmonogram i zadania','✓','✓','✓'],
-  ['report','Budżet i koszty','✓','✓','✓'],
-  ['report','Raporty','podstawowe','zaawansowane','zaawansowane'],
-  ['document','Eksport danych','—','✓','✓'],
-  ['users','Priorytetowe wsparcie','—','e-mail','telefoniczne'],
-]
-
-const faqs = [
-  ['Czy mogę przetestować Investrę za darmo?','Tak. Każdy plan możesz testować przez 14 dni bez podawania danych karty.'],
-  ['Czy wykonawca musi mieć własne konto?','Nie. Możesz zaprosić wykonawcę do swojej inwestycji i nadać mu odpowiedni zakres dostępu.'],
-  ['Czy mogę zmienić plan w dowolnym momencie?','Tak. Plan możesz podnieść lub obniżyć w dowolnej chwili.'],
-  ['Jakie są formy płatności?','Obsługujemy płatności kartą oraz przelewem dla planów firmowych.'],
-  ['Czy mogę zrezygnować w każdej chwili?','Tak. Nie wymagamy umowy długoterminowej ani okresu wypowiedzenia.'],
-  ['Czy moje dane są bezpieczne?','Tak. Dane są szyfrowane, regularnie archiwizowane i przechowywane zgodnie z RODO.'],
-]
+const { copy } = useI18n()
+const page = computed(() => copy.value.pricing)
 </script>
 
 <template>
   <div class="pricing-page">
-    <header class="site-header">
-      <div class="header-inner">
-        <LogoMark/>
-        <nav class="desktop-nav"><RouterLink v-for="item in nav" :key="item[0]" :to="item[1]" :class="{active:item[0]==='Cennik'}">{{item[0]}}</RouterLink></nav>
-        <div class="header-actions"><a href="#">Zaloguj się</a><a class="primary-button" href="#plans">Załóż konto</a></div>
-        <button class="menu-button" :aria-expanded="menuOpen" aria-label="Otwórz menu" @click="menuOpen=!menuOpen">{{menuOpen?'×':'☰'}}</button>
-      </div>
-      <nav v-if="menuOpen" class="mobile-nav"><RouterLink v-for="item in nav" :key="item[0]" :to="item[1]" @click="menuOpen=false">{{item[0]}}</RouterLink></nav>
-    </header>
-
     <main>
       <section class="hero page-shell">
         <div class="hero-copy">
-          <h1>Prosty cennik.<br><span>Pełna kontrola Twojej<br>inwestycji.</span></h1>
-          <p>Wybierz plan dopasowany do Twoich potrzeb. Bez ukrytych kosztów, bez długich umów. Zrezygnuj w dowolnym momencie.</p>
+          <h1>{{page.titleA}}<br><span>{{page.titleB}}</span></h1>
+          <p>{{page.intro}}</p>
           <div class="hero-perks">
-            <div><span><AppIcon name="calendar" :size="27"/></span><b>14 dni za darmo</b><small>Bez zobowiązań</small></div>
-            <div><span>▭</span><b>Bez karty płatniczej</b><small>Podczas okresu próbnego</small></div>
-            <div><span>×</span><b>Anulujesz w każdej chwili</b><small>Bez dodatkowych opłat</small></div>
+            <div v-for="(perk,i) in page.perks" :key="perk[0]"><span><AppIcon v-if="i===0" name="calendar" :size="27"/><template v-else>{{i===1?'▭':'×'}}</template></span><b>{{perk[0]}}</b><small>{{perk[1]}}</small></div>
           </div>
         </div>
         <div class="hero-visual"><DashboardMockup/></div>
       </section>
 
       <section id="plans" class="plans page-shell">
-        <div class="billing-switch"><span :class="{active:!annual}">Rozliczenie miesięczne</span><button type="button" :class="{annual}" :aria-pressed="annual" @click="annual=!annual"><i></i></button><span :class="{active:annual}">Rozliczenie roczne <b>–20%</b></span></div>
+        <div class="billing-switch"><span :class="{active:!annual}">{{page.monthlyBilling}}</span><button type="button" :class="{annual}" :aria-pressed="annual" @click="annual=!annual"><i></i></button><span :class="{active:annual}">{{page.annualBilling}} <b>–20%</b></span></div>
         <div class="plan-grid">
-          <article v-for="plan in plans" :key="plan.name" class="plan-card" :class="{featured:plan.featured}">
-            <span v-if="plan.featured" class="popular">NAJCZĘŚCIEJ WYBIERANY</span>
+          <article v-for="plan in page.plans" :key="plan.name" class="plan-card" :class="{featured:plan.featured}">
+            <span v-if="plan.featured" class="popular">{{page.popular}}</span>
             <h2>{{plan.name}}</h2><p class="subtitle">{{plan.subtitle}}</p>
-            <div class="price"><b>{{annual?plan.yearly:plan.monthly}}</b><strong>zł</strong><span>/ miesiąc</span></div>
+            <div class="price"><b>{{annual?plan.yearly:plan.monthly}}</b><strong>{{copy.currency}}</strong><span>{{page.perMonth}}</span></div>
             <p class="description">{{plan.description}}</p>
-            <a href="#" :class="plan.featured?'solid-button':'outline-button'">Wypróbuj za darmo</a>
+            <a href="#" :class="plan.featured?'solid-button':'outline-button'">{{page.tryFree}}</a>
             <ul><li v-for="item in plan.features" :key="item">{{item}}</li><li class="support">{{plan.support}}</li></ul>
           </article>
         </div>
       </section>
 
-      <section class="custom-offer page-shell"><img :src="folderIcon" alt=""><div><h2>Potrzebujesz indywidualnej oferty dla swojej firmy?</h2><p>Skontaktuj się z nami, przygotujemy ofertę dopasowaną do skali Twojej działalności.</p></div><a class="outline-button" href="#">Skontaktuj się z nami</a></section>
+      <section class="custom-offer page-shell"><img :src="folderIcon" alt=""><div><h2>{{page.customTitle}}</h2><p>{{page.customText}}</p></div><a class="outline-button" href="#">{{page.contactUs}}</a></section>
 
       <section class="comparison page-shell">
         <div class="comparison-table">
-          <div class="comparison-head"><h2>Porównaj plany</h2><div><b>START</b><small>{{annual?31:39}} zł / miesiąc</small></div><div><b>PRO</b><small>{{annual?63:79}} zł / miesiąc</small></div><div><b>BUSINESS</b><small>{{annual?119:149}} zł / miesiąc</small></div></div>
-          <div v-for="row in comparison" :key="row[1]" class="comparison-row"><span><AppIcon :name="row[0]" :size="17"/>{{row[1]}}</span><b :class="{check:row[2]==='✓'}">{{row[2]}}</b><b :class="{check:row[3]==='✓'}">{{row[3]}}</b><b :class="{check:row[4]==='✓'}">{{row[4]}}</b></div>
+          <div class="comparison-head"><h2>{{page.compare}}</h2><div><b>START</b><small>{{annual?31:39}} {{copy.currency}} {{page.perMonth}}</small></div><div><b>PRO</b><small>{{annual?63:79}} {{copy.currency}} {{page.perMonth}}</small></div><div><b>BUSINESS</b><small>{{annual?119:149}} {{copy.currency}} {{page.perMonth}}</small></div></div>
+          <div v-for="row in page.comparison" :key="row[1]" class="comparison-row"><span><AppIcon :name="row[0]" :size="17"/>{{row[1]}}</span><b :class="{check:row[2]==='✓'}">{{row[2]}}</b><b :class="{check:row[3]==='✓'}">{{row[3]}}</b><b :class="{check:row[4]==='✓'}">{{row[4]}}</b></div>
         </div>
       </section>
 
       <section class="faq page-shell">
-        <h2>Najczęściej zadawane pytania</h2>
-        <div class="faq-grid"><details v-for="faq in faqs" :key="faq[0]"><summary>{{faq[0]}}<span>⌄</span></summary><p>{{faq[1]}}</p></details></div>
+        <h2>{{page.faqTitle}}</h2>
+        <div class="faq-grid"><details v-for="faq in page.faqs" :key="faq[0]"><summary>{{faq[0]}}<span>⌄</span></summary><p>{{faq[1]}}</p></details></div>
       </section>
 
       <section class="cta page-shell">
-        <div><h2>Gotowy, aby uporządkować swoją budowę?</h2><p>Dołącz do Investry i zarządzaj inwestycją łatwiej niż kiedykolwiek.</p><ul><li>14 dni za darmo</li><li>Bez karty płatniczej</li><li>Anulujesz w każdej chwili</li></ul></div>
-        <div class="cta-actions"><a class="white-button" href="#">Załóż darmowe konto</a><a class="cta-outline" href="#">Umów prezentację</a></div>
+        <div><h2>{{page.ctaTitle}}</h2><p>{{page.ctaText}}</p><ul><li v-for="item in copy.trial" :key="item">{{item}}</li></ul></div>
+        <div class="cta-actions"><a class="white-button" href="#">{{copy.signup}}</a><a class="cta-outline" href="#">{{copy.bookDemo}}</a></div>
         <div class="cta-devices"><div><span>INVESTRA</span><i></i><i></i><i></i></div><b></b></div>
       </section>
     </main>
 
-    <footer><div class="footer-grid page-shell"><div class="footer-brand"><LogoMark light/><p>Investra to platforma do zarządzania inwestycjami budowlanymi, która łączy inwestora i wykonawcę w jednym miejscu.</p><div class="socials"><span>f</span><span>in</span><span>▶</span></div></div><div v-for="group in [['Produkt','Funkcje','Dla inwestora','Dla wykonawcy','Cennik','Integracje'],['Firma','O nas','Blog','Kariera'],['Pomoc','Centrum pomocy','FAQ','Kontakt'],['Prawne','Regulamin','Polityka prywatności','RODO']]" :key="group[0]"><b>{{group[0]}}</b><a v-for="item in group.slice(1)" :key="item" href="#">{{item}}</a></div></div><div class="copyright page-shell">© 2024 Investra. Wszelkie prawa zastrzeżone.</div></footer>
+    <footer><div class="footer-grid page-shell"><div class="footer-brand"><LogoMark light/><p>{{copy.footerText}}</p><div class="socials"><span>f</span><span>in</span><span>▶</span></div></div><div v-for="group in copy.footerGroups" :key="group[0]"><b>{{group[0]}}</b><a v-for="item in group.slice(1)" :key="item" href="#">{{item}}</a></div></div><div class="copyright page-shell">{{copy.copyright}}</div></footer>
   </div>
 </template>
 

@@ -1,100 +1,65 @@
 <script setup>
-import { ref } from 'vue'
+import { computed } from 'vue'
 import AppIcon from './AppIcon.vue'
 import DashboardMockup from './DashboardMockup.vue'
 import LogoMark from './LogoMark.vue'
-import folderIcon from '../assets/images/01-folder.svg'
-import calendarIcon from '../assets/images/02-kalendarz.svg'
-import chatIcon from '../assets/images/03-rozmowa.svg'
-import chartIcon from '../assets/images/04-wykres.svg'
-import cameraIcon from '../assets/images/05-aparat.svg'
-import shieldIcon from '../assets/images/06-tarcza.svg'
+import folderIcon from '../assets/images/icons/01-folder.svg'
+import calendarIcon from '../assets/images/icons/02-kalendarz.svg'
+import chatIcon from '../assets/images/icons/03-rozmowa.svg'
+import chartIcon from '../assets/images/icons/04-wykres.svg'
+import cameraIcon from '../assets/images/icons/05-aparat.svg'
+import shieldIcon from '../assets/images/icons/06-tarcza.svg'
+import { useI18n } from '../i18n.js'
 
-const menuOpen = ref(false)
-const nav = [['Funkcje','/funkcje'],['Dla inwestora','/dla-inwestora'],['Dla wykonawcy','/dla-wykonawcy'],['Cennik','/cennik'],['Blog','/#blog'],['O nas','/o-nas'],['Kontakt','/kontakt']]
-const benefits = [
-  ['phone','Mniej telefonów i przerwań','Klient ma dostęp do wszystkiego online, więc nie musisz ciągle odbierać i tłumaczyć.'],
-  ['folder','Porządek i organizacja','Wszystkie dokumenty, zdjęcia, ustalenia i plany w jednym miejscu.'],
-  ['shield','Dowód wykonanych prac','Dziennik budowy i raporty są najlepszym dowodem Twojej pracy.'],
-  ['users','Większe zaufanie klientów','Przejrzystość i dostęp do postępów budują profesjonalny wizerunek Twojej firmy.'],
-  ['clock','Oszczędność czasu i pieniędzy','Mniej chaosu = sprawniejsza praca i większa rentowność projektów.'],
-]
-const workflow = [
-  [chatIcon,'Dodaj inwestycję i zaproś klientów','Zaproś inwestora, kierownika budowy i projektanta do współpracy.'],
-  [calendarIcon,'Planuj i przydzielaj zadania','Twórz harmonogram prac, przydzielaj zadania i kontroluj postępy.'],
-  [cameraIcon,'Dokumentuj na bieżąco','Dodawaj zdjęcia, opisuj prace i zapisuj ustalenia w dzienniku budowy.'],
-  [shieldIcon,'Raportuj i rozliczaj','Generuj raporty, przesyłaj je klientowi i rozliczaj etapy inwestycji.'],
-]
-const tools = [
-  [calendarIcon,'Zarządzanie projektem','Pełny harmonogram prac, kamienie milowe i kontrola terminów.'],
-  [chatIcon,'Komunikacja w jednym miejscu','Wszystkie ustalenia z inwestorem i zespołem w jednym wątku.'],
-  [cameraIcon,'Dziennik budowy','Zdjęcia z opisem, etapy prac i historia zmian.'],
-  [folderIcon,'Dokumenty i plany','Wersje projektów, umowy, protokoły i wszystkie pliki pod ręką.'],
-  [calendarIcon,'Budżet i rozliczenia','Kontrola kosztów, budżet, faktury i płatności etapowe.'],
-  [chartIcon,'Raporty dla klienta','Automatyczne raporty PDF z postępów prac i kosztów.'],
-  [chatIcon,'Role i uprawnienia','Dostosuj dostęp dla kierownika, podwykonawców i projektanta.'],
-  [folderIcon,'Archiwum inwestycji','Pełna historia inwestycji zawsze dostępna – również po zakończeniu.'],
-]
-const opinions = [
-  ['PK','„Dzięki Investrze nie muszę już wysyłać zdjęć na WhatsAppie. Klient ma wszystko w aplikacji, a ja oszczędzam mnóstwo czasu.”','Paweł K.','Właściciel firmy budowlanej'],
-  ['TR','„Porządek w dokumentach i jasna komunikacja z inwestorem sprawiają, że moja firma wygląda profesjonalnie i budzi większe zaufanie.”','Tomasz R.','Kierownik budowy'],
-  ['ML','„Raporty z budowy i zdjęcia to teraz standard. Klient widzi postępy, a my mamy dowód wykonanych prac.”','Marek L.','Wykonawca instalacji'],
-]
+const { copy } = useI18n()
+const page = computed(() => copy.value.contractor)
+const workflow = computed(() => page.value.workflow.map((item,index) => [[chatIcon,calendarIcon,cameraIcon,shieldIcon][index],...item]))
+const tools = computed(() => page.value.tools.map((item,index) => [[calendarIcon,chatIcon,cameraIcon,folderIcon,calendarIcon,chartIcon,chatIcon,folderIcon][index],...item]))
 </script>
 
 <template>
   <div class="contractor-page">
-    <header class="site-header">
-      <div class="header-inner">
-        <LogoMark/>
-        <nav class="desktop-nav"><RouterLink v-for="item in nav" :key="item[0]" :to="item[1]" :class="{active:item[0]==='Dla wykonawcy'}">{{item[0]}}</RouterLink></nav>
-        <div class="header-actions"><a href="#">Zaloguj się</a><a class="primary-button" href="#cta">Załóż konto</a></div>
-        <button class="menu-button" :aria-expanded="menuOpen" aria-label="Otwórz menu" @click="menuOpen=!menuOpen">{{menuOpen?'×':'☰'}}</button>
-      </div>
-      <nav v-if="menuOpen" class="mobile-nav"><RouterLink v-for="item in nav" :key="item[0]" :to="item[1]" @click="menuOpen=false">{{item[0]}}</RouterLink></nav>
-    </header>
-
     <main>
       <section class="hero page-shell">
         <div class="hero-copy">
-          <nav class="breadcrumbs"><RouterLink to="/">Strona główna</RouterLink><span>›</span><span>Dla wykonawcy</span></nav>
-          <span class="eyebrow">DLA FIRM BUDOWLANYCH I WYKONAWCÓW</span>
-          <h1>Profesjonalnie<br>prowadź inwestycje<br>i zyskaj zaufanie klientów</h1>
-          <p>Investra porządkuje komunikację, dokumentację i procesy na każdej budowie. Mniej telefonów, mniej nieporozumień, więcej czasu na realizację i rozwój firmy.</p>
-          <ul><li>Mniej telefonów i SMS-ów od klientów</li><li>Wszystkie ustalenia i dokumenty w jednym miejscu</li><li>Dowód wykonanych prac i pełna historia inwestycji</li><li>Profesjonalny wizerunek i większe zaufanie</li></ul>
-          <div class="hero-actions"><a class="primary-button" href="#cta">Załóż darmowe konto</a><a class="secondary-button" href="#"><AppIcon name="calendar" :size="18"/>Umów prezentację</a></div>
+          <nav class="breadcrumbs"><RouterLink to="/">{{copy.homeLabel}}</RouterLink><span>›</span><span>{{copy.nav.contractor}}</span></nav>
+          <span class="eyebrow">{{page.eyebrow}}</span>
+          <h1>{{page.title}}</h1>
+          <p>{{page.intro}}</p>
+          <ul><li v-for="item in page.heroBullets" :key="item">{{item}}</li></ul>
+          <div class="hero-actions"><a class="primary-button" href="https://app.e-investra.pl/accounts/signup/">{{copy.signup}}</a><a class="secondary-button" href="#"><AppIcon name="calendar" :size="18"/>{{copy.bookDemo}}</a></div>
         </div>
         <div class="hero-visual"><DashboardMockup/></div>
       </section>
 
       <section class="benefits section-shell">
-        <h2>Co zyskujesz jako wykonawca dzięki Investrze?</h2>
-        <div class="benefit-grid"><article v-for="benefit in benefits" :key="benefit[1]"><span class="round-icon"><AppIcon :name="benefit[0]" :size="31"/></span><h3>{{benefit[1]}}</h3><p>{{benefit[2]}}</p></article></div>
+        <h2>{{page.benefitsTitle}}</h2>
+        <div class="benefit-grid"><article v-for="benefit in page.benefits" :key="benefit[1]"><span class="round-icon"><AppIcon :name="benefit[0]" :size="31"/></span><h3>{{benefit[1]}}</h3><p>{{benefit[2]}}</p></article></div>
       </section>
 
       <section class="workflow">
-        <div class="section-shell"><h2>Jak wygląda współpraca z Investrą?</h2><div class="workflow-grid"><article v-for="(step,i) in workflow" :key="step[1]"><div class="step-visual"><span>{{i+1}}</span><img :src="step[0]" alt=""></div><div><h3>{{step[1]}}</h3><p>{{step[2]}}</p></div><i v-if="i<workflow.length-1">⟶</i></article></div></div>
+        <div class="section-shell"><h2>{{page.workflowTitle}}</h2><div class="workflow-grid"><article v-for="(step,i) in workflow" :key="step[1]"><div class="step-visual"><span>{{i+1}}</span><img :src="step[0]" alt=""></div><div><h3>{{step[1]}}</h3><p>{{step[2]}}</p></div><i v-if="i<workflow.length-1">⟶</i></article></div></div>
       </section>
 
       <section class="tools section-shell">
-        <h2>Wszystkie narzędzia stworzone dla wykonawców</h2>
+        <h2>{{page.toolsTitle}}</h2>
         <div class="tools-grid"><article v-for="tool in tools" :key="tool[1]"><img :src="tool[0]" alt=""><div><h3>{{tool[1]}}</h3><p>{{tool[2]}}</p></div></article></div>
       </section>
 
       <section class="opinions section-shell">
-        <h2>Co mówią wykonawcy?</h2>
-        <div class="opinion-grid"><article v-for="opinion in opinions" :key="opinion[2]"><span class="quote">“</span><p>{{opinion[1]}}</p><div class="author"><span>{{opinion[0]}}</span><div><b>{{opinion[2]}}</b><small>{{opinion[3]}}</small></div></div></article></div>
+        <h2>{{page.opinionsTitle}}</h2>
+        <div class="opinion-grid"><article v-for="opinion in page.opinions" :key="opinion[2]"><span class="quote">“</span><p>{{opinion[1]}}</p><div class="author"><span>{{opinion[0]}}</span><div><b>{{opinion[2]}}</b><small>{{opinion[3]}}</small></div></div></article></div>
         <div class="dots"><i></i><i></i><i></i></div>
       </section>
 
       <section id="cta" class="cta page-shell">
-        <div><h2>Zwiększ efektywność swojej firmy</h2><p>Dołącz do Investry i prowadź inwestycje profesjonalnie od dziś.</p><ul><li>14 dni za darmo</li><li>Bez karty płatniczej</li><li>Anulujesz w każdej chwili</li></ul></div>
-        <div class="cta-actions"><a class="white-button" href="#">Załóż darmowe konto</a><a class="outline-button" href="#">Umów prezentację&nbsp; →</a></div>
+        <div><h2>{{page.ctaTitle}}</h2><p>{{page.ctaText}}</p><ul><li v-for="item in copy.trial" :key="item">{{item}}</li></ul></div>
+        <div class="cta-actions"><a class="white-button" href="https://app.e-investra.pl/accounts/signup/">{{copy.signup}}</a><a class="outline-button" href="#">{{copy.bookDemo}}&nbsp; →</a></div>
         <div class="cta-devices"><div><span>INVESTRA</span><i></i><i></i><i></i></div><b></b></div>
       </section>
     </main>
 
-    <footer><div class="footer-grid page-shell"><div class="footer-brand"><LogoMark light/><p>Investra to platforma do zarządzania inwestycjami budowlanymi, która łączy inwestora i wykonawcę w jednym miejscu.</p><div class="socials"><span>f</span><span>in</span><span>▶</span></div></div><div v-for="group in [['Produkt','Funkcje','Dla inwestora','Dla wykonawcy','Cennik','Integracje'],['Firma','O nas','Blog','Kariera'],['Pomoc','Centrum pomocy','FAQ','Kontakt'],['Prawne','Regulamin','Polityka prywatności','RODO']]" :key="group[0]"><b>{{group[0]}}</b><a v-for="item in group.slice(1)" :key="item" href="#">{{item}}</a></div></div><div class="copyright page-shell">© 2024 Investra. Wszelkie prawa zastrzeżone.</div></footer>
+    <footer><div class="footer-grid page-shell"><div class="footer-brand"><LogoMark light/><p>{{copy.footerText}}</p><div class="socials"><span>f</span><span>in</span><span>▶</span></div></div><div v-for="group in copy.footerGroups" :key="group[0]"><b>{{group[0]}}</b><a v-for="item in group.slice(1)" :key="item" href="#">{{item}}</a></div></div><div class="copyright page-shell">{{copy.copyright}}</div></footer>
   </div>
 </template>
 
@@ -103,5 +68,12 @@ const opinions = [
 @media(max-width:1100px){.header-inner{padding:0 24px}.desktop-nav{gap:16px}.header-actions{display:none}.hero{grid-template-columns:45% 55%}.hero h1{font-size:37px}.hero-visual{transform:none}.workflow-grid{gap:16px}.workflow-grid article{grid-template-columns:67px 1fr}.step-visual{width:67px;height:67px}.step-visual img{width:54px;height:54px}.workflow-grid article>i{display:none}.footer-grid{gap:25px}}
 @media(max-width:820px){.desktop-nav{display:none}.menu-button{display:block;border:0;background:none;font-size:25px}.mobile-nav{display:block;padding:10px 20px 18px;border-top:1px solid #eef2f7;background:#fff}.mobile-nav a{display:block;padding:9px;color:var(--ink);font-weight:700;text-decoration:none}.hero{height:auto;display:block;padding-top:25px}.hero-copy{padding:0}.hero-visual{height:390px;margin-top:15px}.hero-visual>div{transform:scale(.8);transform-origin:top center}.benefit-grid{grid-template-columns:repeat(2,1fr)}.benefit-grid article:last-child{grid-column:1/-1}.workflow-grid,.tools-grid{grid-template-columns:repeat(2,1fr)}.opinion-grid{grid-template-columns:1fr}.opinion-grid article{min-height:auto}.opinion-grid article>p{min-height:auto}.cta{grid-template-columns:1fr 200px}.cta-devices{display:none}.cta ul{flex-wrap:wrap}.footer-grid{grid-template-columns:1.5fr repeat(2,1fr)}}
 @media(max-width:560px){.page-shell,.section-shell{width:calc(100% - 24px)}.header-inner{height:64px;padding:0 14px}.hero h1{font-size:33px}.hero-actions{flex-direction:column}.hero-visual{height:280px;overflow:hidden}.hero-visual>div{width:150%;transform:scale(.62);transform-origin:top left}.benefit-grid,.workflow-grid,.tools-grid{grid-template-columns:1fr}.benefit-grid article:last-child{grid-column:auto}.tools-grid article{min-height:105px}.cta{grid-template-columns:1fr;padding:24px 18px;text-align:center}.cta h2{text-align:center}.cta ul{justify-content:center}.footer-grid{grid-template-columns:1fr 1fr;gap:30px}.footer-brand{grid-column:1/-1}}
+</style>
+
+<style scoped>
+.benefits { padding-top: 96px; }
+@media (max-width: 820px) {
+  .benefits { padding-top: 64px; }
+}
 </style>
 

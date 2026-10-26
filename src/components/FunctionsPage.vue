@@ -1,57 +1,43 @@
 <script setup>
-import { ref } from 'vue'
+import { computed } from 'vue'
 import AppIcon from './AppIcon.vue'
 import DashboardMockup from './DashboardMockup.vue'
 import LogoMark from './LogoMark.vue'
-import folderIcon from '../assets/images/01-folder.svg'
-import calendarIcon from '../assets/images/02-kalendarz.svg'
-import chatIcon from '../assets/images/03-rozmowa.svg'
-import chartIcon from '../assets/images/04-wykres.svg'
-import cameraIcon from '../assets/images/05-aparat.svg'
-import shieldIcon from '../assets/images/06-tarcza.svg'
+import folderIcon from '../assets/images/icons/01-folder.svg'
+import calendarIcon from '../assets/images/icons/02-kalendarz.svg'
+import chatIcon from '../assets/images/icons/03-rozmowa.svg'
+import chartIcon from '../assets/images/icons/04-wykres.svg'
+import cameraIcon from '../assets/images/icons/05-aparat.svg'
+import shieldIcon from '../assets/images/icons/06-tarcza.svg'
+import { useI18n } from '../i18n.js'
 
-const menuOpen = ref(false)
-const nav = [['Funkcje','/funkcje'],['Dla inwestora','/dla-inwestora'],['Dla wykonawcy','/dla-wykonawcy'],['Cennik','/cennik'],['Blog','/#blog'],['O nas','/o-nas'],['Kontakt','/kontakt']]
-const tabs = [['calendar','Wszystkie funkcje','dokumentacja'],['users','Zarządzanie projektem','harmonogram'],['folder','Dokumentacja','dokumentacja'],['chat','Komunikacja','komunikator'],['report','Budżet i koszty','budzet'],['shield','Raporty i kontrola','raporty'],['users','Uprawnienia i role','raporty']]
-const features = [
-  {id:'dokumentacja',kind:'docs',icon:folderIcon,title:'Dokumentacja',description:'Wszystkie pliki projektowe i dokumenty budowy w jednym, bezpiecznym miejscu.',bullets:['Przechowuj i porządkuj dokumenty','Kontroluj wersje i historię zmian','Udostępniaj wybrane pliki współpracownikom','Bezpieczne kopie zapasowe']},
-  {id:'harmonogram',kind:'schedule',icon:calendarIcon,title:'Harmonogram i zadania',description:'Planuj prace, kontroluj terminy i monitoruj postępy na każdym etapie inwestycji.',bullets:['Twórz harmonogramy i kamienie milowe','Przypisuj zadania i ustalaj terminy','Śledź postęp prac w czasie rzeczywistym','Otrzymuj powiadomienia o opóźnieniach']},
-  {id:'komunikator',kind:'chat',icon:chatIcon,title:'Komunikator',description:'Wszystkie rozmowy związane z inwestycją w jednym miejscu – koniec z SMS-ami i Messengerem.',bullets:['Rozmowy w ramach inwestycji i zadań','Załączniki, zdjęcia i pliki w kontekście','Powiadomienia o nowych wiadomościach','Historia komunikacji zawsze pod ręką']},
-  {id:'budzet',kind:'budget',icon:chartIcon,title:'Budżet i koszty',description:'Kontroluj wydatki, porównuj budżet z rzeczywistością i unikaj nieprzewidzianych kosztów.',bullets:['Plan budżetu i kategorie kosztów','Rejestruj faktury i wydatki','Porównuj plan vs. rzeczywistość','Wykresy i raporty finansowe']},
-  {id:'dziennik',kind:'diary',icon:cameraIcon,title:'Dziennik budowy',description:'Zdjęcia z budowy uporządkowane chronologicznie z opisem i lokalizacją.',bullets:['Dodawaj zdjęcia z telefonu lub aplikacji','Opisuj postępy i etapy prac','Lokalizacja i data wykonania','Eksportuj raporty zdjęciowe']},
-  {id:'raporty',kind:'report',icon:shieldIcon,title:'Raporty i kontrola',description:'Pełna kontrola nad inwestycją dzięki przejrzystym raportom i historii działań.',bullets:['Raporty postępu inwestycji','Historia zmian i aktywności','Eksport do PDF i Excel','Wskaźniki i podsumowania']},
-]
-const documents = [['▣','Projekt budowlany.pdf','PDF'],['▣','Umowa z wykonawcą.pdf','PDF'],['▦','Kosztorys.xlsx','XLS'],['▦','Dziennik budowy.pdf','PDF']]
+const { copy } = useI18n()
+const page = computed(() => copy.value.functions)
+// Zachowujemy moduł komunikatora w danych, ale tymczasowo nie pokazujemy go w interfejsie.
+const hiddenFeatureIds = new Set(['komunikator'])
+const visibleTabs = computed(() => page.value.tabs.filter((tab) => !hiddenFeatureIds.has(tab[2])))
+const visibleFeatures = computed(() => page.value.features.map((feature,index) => ({...feature,icon:[folderIcon,calendarIcon,chatIcon,chartIcon,cameraIcon,shieldIcon][index]})).filter((feature) => !hiddenFeatureIds.has(feature.id)))
+const documents = computed(() => page.value.documents.map((name,index) => [[index<2?'▣':'▦',name,index===2?'XLS':'PDF']][0]))
 </script>
 
 <template>
   <div class="functions-page">
-    <header class="site-header">
-      <div class="header-inner">
-        <LogoMark/>
-        <nav class="desktop-nav"><RouterLink v-for="item in nav" :key="item[0]" :to="item[1]" :class="{active:item[0]==='Funkcje'}">{{item[0]}}</RouterLink></nav>
-        <div class="header-actions"><a href="#">Zaloguj się</a><a class="primary-button" href="#cta">Załóż konto</a></div>
-        <button class="menu-button" :aria-expanded="menuOpen" aria-label="Otwórz menu" @click="menuOpen=!menuOpen">{{menuOpen?'×':'☰'}}</button>
-      </div>
-      <nav v-if="menuOpen" class="mobile-nav"><RouterLink v-for="item in nav" :key="item[0]" :to="item[1]" @click="menuOpen=false">{{item[0]}}</RouterLink></nav>
-    </header>
-
     <main>
       <section class="hero page-shell">
         <div class="hero-copy">
-          <nav class="breadcrumbs"><RouterLink to="/">Strona główna</RouterLink><span>›</span><span>Funkcje</span></nav>
-          <h1>Funkcje Investry</h1>
-          <p>Wszystkie narzędzia, których potrzebujesz do skutecznego zarządzania inwestycją budowlaną w jednym miejscu.</p>
+          <nav class="breadcrumbs"><RouterLink to="/">{{copy.homeLabel}}</RouterLink><span>›</span><span>{{copy.nav.features}}</span></nav>
+          <h1>{{page.title}}</h1>
+          <p>{{page.intro}}</p>
         </div>
         <div class="hero-visual"><DashboardMockup/></div>
       </section>
 
-      <nav class="feature-tabs page-shell" aria-label="Kategorie funkcji">
-        <a v-for="(tab,i) in tabs" :key="tab[1]" :href="`#${tab[2]}`" :class="{selected:i===0}"><AppIcon :name="tab[0]" :size="21"/><span>{{tab[1]}}</span></a>
+      <nav class="feature-tabs page-shell" :aria-label="page.categoriesLabel">
+        <a v-for="(tab,i) in visibleTabs" :key="tab[1]" :href="`#${tab[2]}`" :class="{selected:i===0}"><AppIcon :name="tab[0]" :size="21"/><span>{{tab[1]}}</span></a>
       </nav>
 
       <section class="features page-shell">
-        <article v-for="feature in features" :id="feature.id" :key="feature.id" class="feature-card">
+        <article v-for="feature in visibleFeatures" :id="feature.id" :key="feature.id" class="feature-card">
           <div class="feature-copy">
             <img :src="feature.icon" alt="" width="80" height="80">
             <div><h2>{{feature.title}}</h2><p>{{feature.description}}</p><ul><li v-for="bullet in feature.bullets" :key="bullet">{{bullet}}</li></ul></div>
@@ -59,37 +45,37 @@ const documents = [['▣','Projekt budowlany.pdf','PDF'],['▣','Umowa z wykonaw
 
           <div class="product-preview" :class="`preview-${feature.kind}`">
             <template v-if="feature.kind==='docs'">
-              <aside><b>Dokumenty</b><span class="is-active">Wszystkie</span><span>Projekty</span><span>Umowy</span><span>Pozwolenia</span><span>Dziennik budowy</span></aside>
-              <div class="preview-content"><div class="preview-title"><b>Dokumenty</b><button>Dodaj dokument</button></div><div class="table-head"><span>Nazwa</span><span>Typ</span><span>Data</span></div><div v-for="(row,i) in documents" :key="row[1]" class="document-row"><i :class="{green:i>1}">{{row[0]}}</i><b>{{row[1]}}</b><span>{{row[2]}}</span><span>20.08.24</span><em>•••</em></div></div>
+              <aside><b>{{page.ui.documents}}</b><span class="is-active">{{page.ui.all}}</span><span>{{page.ui.projects}}</span><span>{{page.ui.contracts}}</span><span>{{page.ui.permits}}</span><span>{{page.ui.diary}}</span></aside>
+              <div class="preview-content"><div class="preview-title"><b>{{page.ui.documents}}</b><button>{{page.ui.addDocument}}</button></div><div class="table-head"><span>{{page.ui.name}}</span><span>{{page.ui.type}}</span><span>{{page.ui.date}}</span></div><div v-for="(row,i) in documents" :key="row[1]" class="document-row"><i :class="{green:i>1}">{{row[0]}}</i><b>{{row[1]}}</b><span>{{row[2]}}</span><span>20.08.24</span><em>•••</em></div></div>
             </template>
 
             <template v-else-if="feature.kind==='schedule'">
-              <div class="wide-preview"><div class="preview-title"><b>Harmonogram</b></div><div class="schedule-grid"><div class="schedule-labels"><b>Etap</b><span>Fundamenty</span><span>Ściany</span><span>Dach</span><span>Instalacje</span><span>Elewacja</span><span>Wykończenia</span></div><div class="gantt"><div class="months"><span>Maj</span><span>Cze</span><span>Lip</span><span>Sie</span><span>Wrz</span><span>Paź</span></div><i v-for="i in 6" :key="i" :style="{marginLeft:(i*9)+'%',width:(18+(i%3)*6)+'%'}"></i></div><div class="tasks"><b>Zadania</b><p v-for="(x,i) in ['Wylanie fundamentów','Zbrojenie','Wylanie betonu','Ściany fundamentowe']" :key="x"><i :class="`dot-${i}`"></i>{{x}}<span>{{90-i*20}}%</span></p></div></div></div>
+              <div class="wide-preview"><div class="preview-title"><b>{{page.ui.schedule}}</b></div><div class="schedule-grid"><div class="schedule-labels"><b>{{page.ui.stage}}</b><span v-for="stage in page.ui.stages" :key="stage">{{stage}}</span></div><div class="gantt"><div class="months"><span v-for="month in page.ui.months" :key="month">{{month}}</span></div><i v-for="i in 6" :key="i" :style="{marginLeft:(i*9)+'%',width:(18+(i%3)*6)+'%'}"></i></div><div class="tasks"><b>{{page.ui.tasks}}</b><p v-for="(x,i) in page.ui.taskNames" :key="x"><i :class="`dot-${i}`"></i>{{x}}<span>{{90-i*20}}%</span></p></div></div></div>
             </template>
 
             <template v-else-if="feature.kind==='chat'">
-              <div class="conversation"><b>Komunikacja</b><div v-for="(person,i) in [['Kierownik budowy','Proszę o akceptację zdjęć.'],['Inwestor','Dziękuję, wygląda dobrze.'],['Wykonawca','Jutro zaczynamy instalację.']]" :key="person[0]" class="message"><span class="avatar">{{person[0][0]}}</span><p><b>{{person[0]}}</b><small>{{person[1]}}</small></p><time>0{{9-i}}:2{{i}}</time></div></div><div class="chat-window"><p>Proszę o akceptację zdjęć z dzisiejszych prac.</p><div class="photo-grid"><i v-for="i in 3" :key="i"></i></div><span class="bubble">Dziękuję, wygląda dobrze.</span><label>Napisz wiadomość... <b>⊙</b></label></div>
+              <div class="conversation"><b>{{page.ui.chat.title}}</b><div v-for="(person,i) in page.ui.chat.messages" :key="person[0]" class="message"><span class="avatar">{{person[0][0]}}</span><p><b>{{person[0]}}</b><small>{{person[1]}}</small></p><time>0{{9-i}}:2{{i}}</time></div></div><div class="chat-window"><p>{{page.ui.chat.request}}</p><div class="photo-grid"><i v-for="i in 3" :key="i"></i></div><span class="bubble">{{page.ui.chat.reply}}</span><label>{{page.ui.chat.placeholder}} <b>⊙</b></label></div>
             </template>
 
             <template v-else-if="feature.kind==='budget'">
-              <div class="budget-chart"><b>Budżet</b><div class="budget-body"><div class="donut"><span>432 600 zł</span></div><ul><li><i></i>Materiały <b>232 000 zł</b></li><li><i></i>Robocizna <b>152 000 zł</b></li><li><i></i>Inne <b>48 600 zł</b></li></ul></div></div><div class="expenses"><b>Wydatki</b><p v-for="(x,i) in ['Faktura FV/15/05','Faktura FV/16/05','Faktura FV/17/05']" :key="x"><span>▧ &nbsp;{{x}}</span><strong>{{[12450,8900,15600][i].toLocaleString('pl-PL')}} zł</strong></p><button>Dodaj wydatek</button></div>
+              <div class="budget-chart"><b>{{page.ui.budget}}</b><div class="budget-body"><div class="donut"><span>432 600 {{copy.currency}}</span></div><ul><li><i></i>{{page.ui.materials}} <b>232 000 {{copy.currency}}</b></li><li><i></i>{{page.ui.labour}} <b>152 000 {{copy.currency}}</b></li><li><i></i>{{page.ui.other}} <b>48 600 {{copy.currency}}</b></li></ul></div></div><div class="expenses"><b>{{page.ui.expenses}}</b><p v-for="(x,i) in ['FV/15/05','FV/16/05','FV/17/05']" :key="x"><span>▧ &nbsp;{{x}}</span><strong>{{[12450,8900,15600][i].toLocaleString()}} {{copy.currency}}</strong></p><button>{{page.ui.addExpense}}</button></div>
             </template>
 
             <template v-else-if="feature.kind==='diary'">
-              <div class="diary"><b>Dziennik budowy</b><div class="gallery"><i v-for="(x,i) in 6" :key="x"><span>{{14-Math.floor(i/3)}} maja 2024</span></i></div></div><div class="details"><b>Szczegóły</b><dl><dt>Data</dt><dd>15 maj 2024, 10:24</dd><dt>Etap</dt><dd>Ściany parteru</dd><dt>Opis</dt><dd>Murowanie ścian zewnętrznych</dd><dt>Lokalizacja</dt><dd>Strefa B</dd></dl><button>Edytuj</button></div>
+              <div class="diary"><b>{{page.ui.diary}}</b><div class="gallery"><i v-for="(x,i) in 6" :key="x"><span>2024-05-{{14-Math.floor(i/3)}}</span></i></div></div><div class="details"><b>{{page.ui.details}}</b><dl><dt>{{page.ui.date}}</dt><dd>2024-05-15, 10:24</dd><dt>{{page.ui.stageLabel}}</dt><dd>{{page.ui.groundWalls}}</dd><dt>{{page.ui.description}}</dt><dd>{{page.ui.walling}}</dd><dt>{{page.ui.location}}</dt><dd>{{page.ui.zone}}</dd></dl><button>{{page.ui.edit}}</button></div>
             </template>
 
             <template v-else>
-              <div class="wide-preview report"><div class="preview-title"><b>Raport postępu</b><button>Pobierz raport</button></div><div class="metrics"><div v-for="m in [['Postęp ogólny','68%'],['Zadania','24/35'],['Wydatki','432 600 zł'],['Opóźnienia','2']]" :key="m[0]"><span>{{m[0]}}</span><b>{{m[1]}}</b></div></div><div class="chart-lines"><i v-for="(x,i) in 6" :key="x" :style="{height:(15+i*8)+'px'}"></i></div></div>
+              <div class="wide-preview report"><div class="preview-title"><b>{{page.ui.progressReport}}</b><button>{{page.ui.download}}</button></div><div class="metrics"><div v-for="m in page.ui.metrics" :key="m[0]"><span>{{m[0]}}</span><b>{{m[1]}}</b></div></div><div class="chart-lines"><i v-for="(x,i) in 6" :key="x" :style="{height:(15+i*8)+'px'}"></i></div></div>
             </template>
           </div>
         </article>
       </section>
 
-      <section id="cta" class="cta page-shell"><div><h2>Gotowy, aby uporządkować swoją budowę?</h2><p>Dołącz do Investry i zarządzaj inwestycją łatwiej niż kiedykolwiek.</p></div><div class="cta-actions"><a class="white-button" href="#">Załóż darmowe konto</a><a href="#">Umów prezentację&nbsp; →</a></div><div class="cta-device"><span>INVESTRA</span><i v-for="i in 4" :key="i"></i></div></section>
+      <section id="cta" class="cta page-shell"><div><h2>{{page.ctaTitle}}</h2><p>{{page.ctaText}}</p></div><div class="cta-actions"><a class="white-button" href="https://app.e-investra.pl/accounts/signup/">{{copy.signup}}</a><a href="#">{{copy.bookDemo}}&nbsp; →</a></div><div class="cta-device"><span>INVESTRA</span><i v-for="i in 4" :key="i"></i></div></section>
     </main>
 
-    <footer><div class="footer-grid page-shell"><div class="footer-brand"><LogoMark light/><p>Investra to platforma do zarządzania inwestycjami budowlanymi, która łączy inwestora i wykonawcę w jednym miejscu.</p><div class="socials"><span>f</span><span>in</span><span>▶</span></div></div><div v-for="group in [['Produkt','Funkcje','Dla inwestora','Dla wykonawcy','Cennik','Integracje'],['Firma','O nas','Blog','Kariera'],['Pomoc','Centrum pomocy','FAQ','Kontakt'],['Prawne','Regulamin','Polityka prywatności','RODO']]" :key="group[0]"><b>{{group[0]}}</b><a v-for="item in group.slice(1)" :key="item" href="#">{{item}}</a></div></div><div class="copyright page-shell">© 2024 Investra. Wszelkie prawa zastrzeżone.</div></footer>
+    <footer><div class="footer-grid page-shell"><div class="footer-brand"><LogoMark light/><p>{{copy.footerText}}</p><div class="socials"><span>f</span><span>in</span><span>▶</span></div></div><div v-for="group in copy.footerGroups" :key="group[0]"><b>{{group[0]}}</b><a v-for="item in group.slice(1)" :key="item" href="#">{{item}}</a></div></div><div class="copyright page-shell">{{copy.copyright}}</div></footer>
   </div>
 </template>
 
@@ -98,5 +84,12 @@ const documents = [['▣','Projekt budowlany.pdf','PDF'],['▣','Umowa z wykonaw
 @media(max-width:1100px){.header-inner{padding:0 24px}.desktop-nav{gap:16px}.header-actions{display:none}.feature-tabs{overflow-x:auto;grid-template-columns:repeat(7,150px)}.feature-card{grid-template-columns:40% 60%}.feature-copy{grid-template-columns:72px 1fr;padding-left:14px}.feature-copy img{width:64px;height:64px}.footer-grid{gap:25px}}
 @media(max-width:820px){.desktop-nav{display:none}.menu-button{display:block;border:0;background:none;font-size:25px}.mobile-nav{display:block;padding:10px 20px 18px;border-top:1px solid #eef2f7;background:#fff}.mobile-nav a{display:block;padding:9px;color:var(--ink);font-weight:700;text-decoration:none}.hero{height:auto;display:block;padding-top:30px}.hero-copy{padding:0}.hero h1{margin-top:24px;font-size:36px}.hero-visual{height:320px;margin-top:25px}.feature-card{grid-template-columns:1fr}.feature-copy{grid-template-columns:80px 1fr}.product-preview{min-height:220px;margin:0 16px 16px}.cta{grid-template-columns:1fr 220px}.cta-device{display:none}.footer-grid{grid-template-columns:1.5fr repeat(2,1fr)}}
 @media(max-width:560px){.page-shell{width:calc(100% - 24px)}.header-inner{height:64px;padding:0 14px}.hero h1{font-size:32px}.hero p{font-size:14px}.hero-visual{height:255px;transform:scale(.62);transform-origin:top left;width:155%}.feature-tabs a{min-height:58px}.feature-card{margin-bottom:12px}.feature-copy{grid-template-columns:58px 1fr;padding:20px 14px;gap:12px}.feature-copy img{width:56px;height:56px}.feature-copy h2{font-size:17px}.product-preview{overflow-x:auto;grid-template-columns:90px minmax(440px,1fr)}.preview-schedule,.preview-report{grid-template-columns:minmax(560px,1fr)}.preview-chat{grid-template-columns:280px 300px}.preview-budget{grid-template-columns:310px 270px}.preview-diary{grid-template-columns:340px 220px}.cta{grid-template-columns:1fr;padding:25px 20px;text-align:center}.footer-grid{grid-template-columns:1fr 1fr;gap:30px}.footer-brand{grid-column:1/-1}}
+</style>
+
+<style scoped>
+.feature-tabs { grid-template-columns: repeat(6, 1fr); }
+@media (max-width: 1100px) {
+  .feature-tabs { grid-template-columns: repeat(6, 150px); }
+}
 </style>
 
