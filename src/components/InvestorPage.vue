@@ -1,100 +1,65 @@
 <script setup>
-import { ref } from 'vue'
+import { computed } from 'vue'
 import AppIcon from './AppIcon.vue'
 import DashboardMockup from './DashboardMockup.vue'
 import LogoMark from './LogoMark.vue'
-import folderIcon from '../assets/images/01-folder.svg'
-import calendarIcon from '../assets/images/02-kalendarz.svg'
-import chatIcon from '../assets/images/03-rozmowa.svg'
-import chartIcon from '../assets/images/04-wykres.svg'
-import cameraIcon from '../assets/images/05-aparat.svg'
-import shieldIcon from '../assets/images/06-tarcza.svg'
+import folderIcon from '../assets/images/icons/01-folder.svg'
+import calendarIcon from '../assets/images/icons/02-kalendarz.svg'
+import chatIcon from '../assets/images/icons/03-rozmowa.svg'
+import chartIcon from '../assets/images/icons/04-wykres.svg'
+import cameraIcon from '../assets/images/icons/05-aparat.svg'
+import shieldIcon from '../assets/images/icons/06-tarcza.svg'
+import { useI18n } from '../i18n.js'
 
-const menuOpen = ref(false)
-const nav = [['Funkcje','/funkcje'],['Dla inwestora','/dla-inwestora'],['Dla wykonawcy','/dla-wykonawcy'],['Cennik','/cennik'],['Blog','/#blog'],['O nas','/o-nas'],['Kontakt','/kontakt']]
-const benefits = [
-  ['report','Masz wszystko pod kontrolą','Wszystkie informacje o inwestycji w jednym miejscu.'],
-  ['clock','Oszczędzasz czas','Mniej telefonów, spotkań i niepotrzebnych wyjazdów na budowę.'],
-  ['shield','Zwiększasz bezpieczeństwo','Pełna historia działań, dokumenty i zdjęcia zawsze pod ręką.'],
-  ['folder','Kontrolujesz koszty','Na bieżąco widzisz wydatki i porównujesz je z budżetem.'],
-  ['users','Masz lepszą komunikację','Wszyscy uczestnicy inwestycji wiedzą, co się dzieje.'],
-]
-const steps = [
-  [folderIcon,'Zbierz projekt w jednym miejscu','Dodaj dokumentację, zaproś wykonawcę i innych uczestników inwestycji.'],
-  [calendarIcon,'Planuj i kontroluj postępy','Śledź harmonogram prac, zadania i terminy realizacji.'],
-  [cameraIcon,'Monitoruj na bieżąco','Przeglądaj zdjęcia z budowy, raporty i dziennik postępów.'],
-  [shieldIcon,'Akceptuj i zatwierdzaj','Zatwierdzaj etapy prac i płatności, mając pełną kontrolę.'],
-]
-const tools = [
-  [folderIcon,'Dokumentacja','Wszystkie pliki projektowe i dokumenty budowy w jednym, bezpiecznym miejscu.'],
-  [calendarIcon,'Harmonogram','Przejrzysty plan prac z kontrolą terminów i postępów.'],
-  [chartIcon,'Budżet i koszty','Kontrola wydatków, porównanie z budżetem i pełna historia płatności.'],
-  [cameraIcon,'Dziennik budowy','Zdjęcia i opisy postępów prac uporządkowane chronologicznie.'],
-  [chatIcon,'Komunikacja','Wszystkie ustalenia w jednym miejscu – koniec z SMS-ami i telefonami.'],
-  [chartIcon,'Raporty','Automatyczne raporty PDF z postępów prac i wydatków.'],
-  [shieldIcon,'Użytkownicy i role','Zaproś wykonawcę, kierownika budowy, projektanta i innych.'],
-  [folderIcon,'Archiwum','Pełna historia inwestycji zawsze dostępna.'],
-]
-const testimonials = [
-  ['MK','„Dzięki Investrze wiem dokładnie, co dzieje się na mojej budowie, nawet gdy jestem setki kilometrów dalej. To ogromny spokój.”','Michał K.','Inwestor'],
-  ['AT','„Wszystkie dokumenty, zdjęcia i ustalenia w jednym miejscu. Koniec z szukaniem w mailach i wiadomościach.”','Anna T.','Inwestorka'],
-  ['PS','„Budżet pod kontrolą, jasny harmonogram i świetna komunikacja z wykonawcą. Nie wyobrażam sobie budowy bez Investry.”','Piotr S.','Inwestor'],
-]
+const { copy } = useI18n()
+const page = computed(() => copy.value.investor)
+const steps = computed(() => page.value.steps.map((item,index) => [[folderIcon,calendarIcon,cameraIcon,shieldIcon][index],...item]))
+const tools = computed(() => page.value.tools.map((item,index) => [[folderIcon,calendarIcon,chartIcon,cameraIcon,chatIcon,chartIcon,shieldIcon,folderIcon][index],...item]))
 </script>
 
 <template>
   <div class="investor-page">
-    <header class="site-header">
-      <div class="header-inner">
-        <LogoMark/>
-        <nav class="desktop-nav"><RouterLink v-for="item in nav" :key="item[0]" :to="item[1]" :class="{active:item[0]==='Dla inwestora'}">{{item[0]}}</RouterLink></nav>
-        <div class="header-actions"><a href="#">Zaloguj się</a><a class="primary-button" href="#cta">Załóż konto</a></div>
-        <button class="menu-button" :aria-expanded="menuOpen" aria-label="Otwórz menu" @click="menuOpen=!menuOpen">{{menuOpen?'×':'☰'}}</button>
-      </div>
-      <nav v-if="menuOpen" class="mobile-nav"><RouterLink v-for="item in nav" :key="item[0]" :to="item[1]" @click="menuOpen=false">{{item[0]}}</RouterLink></nav>
-    </header>
-
     <main>
       <section class="hero page-shell">
         <div class="hero-copy">
-          <nav class="breadcrumbs"><RouterLink to="/">Strona główna</RouterLink><span>›</span><span>Dla inwestora</span></nav>
-          <span class="eyebrow">DLA INWESTORA INDYWIDUALNEGO</span>
-          <h1>Pełna kontrola<br>Twojej inwestycji<br>– bez stresu i chaosu</h1>
-          <p>Investra daje Ci wszystko, czego potrzebujesz, aby mieć spokojną głowę i pewność, że Twoja budowa idzie zgodnie z planem – niezależnie od tego, gdzie jesteś.</p>
-          <ul><li>Wszystkie informacje w jednym miejscu</li><li>Dostęp z telefonu i komputera 24/7</li><li>Pełna przejrzystość i bezpieczeństwo</li></ul>
-          <div class="hero-actions"><a class="primary-button" href="#cta">Załóż darmowe konto</a><a class="secondary-button" href="#"><AppIcon name="calendar" :size="18"/>Umów prezentację</a></div>
+          <nav class="breadcrumbs"><RouterLink to="/">{{copy.homeLabel}}</RouterLink><span>›</span><span>{{copy.nav.investor}}</span></nav>
+          <span class="eyebrow">{{page.eyebrow}}</span>
+          <h1>{{page.title}}</h1>
+          <p>{{page.intro}}</p>
+          <ul><li v-for="item in page.heroBullets" :key="item">{{item}}</li></ul>
+          <div class="hero-actions"><a class="primary-button" href="https://app.e-investra.pl/accounts/signup/">{{copy.signup}}</a><a class="secondary-button" href="#"><AppIcon name="calendar" :size="18"/>{{copy.bookDemo}}</a></div>
         </div>
         <div class="hero-visual"><DashboardMockup/><div class="plant"><i></i><i></i><i></i><i></i><span></span></div></div>
       </section>
 
       <section class="benefits section-shell">
-        <h2>Dlaczego inwestorzy wybierają Investrę?</h2>
-        <div class="benefit-grid"><article v-for="benefit in benefits" :key="benefit[1]"><span class="round-icon"><AppIcon :name="benefit[0]" :size="30"/></span><h3>{{benefit[1]}}</h3><p>{{benefit[2]}}</p></article></div>
+        <h2>{{page.benefitsTitle}}</h2>
+        <div class="benefit-grid"><article v-for="benefit in page.benefits" :key="benefit[1]"><span class="round-icon"><AppIcon :name="benefit[0]" :size="30"/></span><h3>{{benefit[1]}}</h3><p>{{benefit[2]}}</p></article></div>
       </section>
 
       <section class="process">
-        <div class="section-shell"><h2>Jak zarządzać budową z Investrą?</h2><div class="steps"><article v-for="(step,i) in steps" :key="step[1]"><span class="step-number">{{i+1}}</span><div class="step-icon"><img :src="step[0]" alt=""></div><h3>{{step[1]}}</h3><p>{{step[2]}}</p><span v-if="i<steps.length-1" class="arrow">⟶</span></article></div></div>
+        <div class="section-shell"><h2>{{page.processTitle}}</h2><div class="steps"><article v-for="(step,i) in steps" :key="step[1]"><span class="step-number">{{i+1}}</span><div class="step-icon"><img :src="step[0]" alt=""></div><h3>{{step[1]}}</h3><p>{{step[2]}}</p><span v-if="i<steps.length-1" class="arrow">⟶</span></article></div></div>
       </section>
 
       <section class="tools section-shell">
-        <h2>Wszystkie narzędzia, których potrzebujesz jako inwestor</h2>
+        <h2>{{page.toolsTitle}}</h2>
         <div class="tools-grid"><article v-for="tool in tools" :key="tool[1]"><img :src="tool[0]" alt=""><div><h3>{{tool[1]}}</h3><p>{{tool[2]}}</p></div></article></div>
       </section>
 
       <section class="opinions section-shell">
-        <h2>Co mówią inwestorzy?</h2>
-        <div class="opinion-grid"><article v-for="opinion in testimonials" :key="opinion[2]"><span class="quote">“</span><p>{{opinion[1]}}</p><div class="author"><span>{{opinion[0]}}</span><div><b>{{opinion[2]}}</b><small>{{opinion[3]}}</small></div></div></article></div>
+        <h2>{{page.opinionsTitle}}</h2>
+        <div class="opinion-grid"><article v-for="opinion in page.opinions" :key="opinion[2]"><span class="quote">“</span><p>{{opinion[1]}}</p><div class="author"><span>{{opinion[0]}}</span><div><b>{{opinion[2]}}</b><small>{{opinion[3]}}</small></div></div></article></div>
         <div class="dots"><i></i><i></i><i></i></div>
       </section>
 
       <section id="cta" class="cta page-shell">
-        <div><h2>Zacznij zarządzać swoją inwestycją mądrzej</h2><p>Załóż darmowe konto i przekonaj się, jak łatwo mieć wszystko pod kontrolą.</p></div>
-        <div class="cta-actions"><a class="primary-button" href="#">Załóż darmowe konto</a><a class="secondary-button" href="#">Umów prezentację</a></div>
+        <div><h2>{{page.ctaTitle}}</h2><p>{{page.ctaText}}</p></div>
+        <div class="cta-actions"><a class="primary-button" href="https://app.e-investra.pl/accounts/signup/">{{copy.signup}}</a><a class="secondary-button" href="#">{{copy.bookDemo}}</a></div>
         <div class="cta-devices"><div><span>INVESTRA</span><i></i><i></i><i></i></div><b></b></div>
       </section>
     </main>
 
-    <footer><div class="footer-grid page-shell"><div class="footer-brand"><LogoMark light/><p>Investra to platforma do zarządzania inwestycjami budowlanymi, która łączy inwestora i wykonawcę w jednym miejscu.</p><div class="socials"><span>f</span><span>in</span><span>▶</span></div></div><div v-for="group in [['Produkt','Funkcje','Dla inwestora','Dla wykonawcy','Cennik','Integracje'],['Firma','O nas','Blog','Kariera'],['Pomoc','Centrum pomocy','FAQ','Kontakt'],['Prawne','Regulamin','Polityka prywatności','RODO']]" :key="group[0]"><b>{{group[0]}}</b><a v-for="item in group.slice(1)" :key="item" href="#">{{item}}</a></div></div><div class="copyright page-shell">© 2024 Investra. Wszelkie prawa zastrzeżone.</div></footer>
+    <footer><div class="footer-grid page-shell"><div class="footer-brand"><LogoMark light/><p>{{copy.footerText}}</p><div class="socials"><span>f</span><span>in</span><span>▶</span></div></div><div v-for="group in copy.footerGroups" :key="group[0]"><b>{{group[0]}}</b><a v-for="item in group.slice(1)" :key="item" href="#">{{item}}</a></div></div><div class="copyright page-shell">{{copy.copyright}}</div></footer>
   </div>
 </template>
 

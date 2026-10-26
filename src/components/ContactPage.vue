@@ -1,89 +1,67 @@
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import DashboardMockup from './DashboardMockup.vue'
 import LogoMark from './LogoMark.vue'
-import contactHero from '../assets/images/contact-hero.png'
-import calendarIcon from '../assets/images/02-kalendarz.svg'
-import mailIcon from '../assets/images/e-mail.svg'
-import chatIcon from '../assets/images/03-rozmowa.svg'
-import cardIcon from '../assets/images/bez-karty.svg'
-import cancelIcon from '../assets/images/anulowanie.svg'
-import phoneIcon from '../assets/images/telefon.svg'
-import timeIcon from '../assets/images/02-czas.svg'
+import contactHero from '../assets/images/contact-hero-wide.png'
+import calendarIcon from '../assets/images/icons/02-kalendarz.svg'
+import mailIcon from '../assets/images/icons/e-mail.svg'
+import chatIcon from '../assets/images/icons/03-rozmowa.svg'
+import cardIcon from '../assets/images/icons/bez-karty.svg'
+import cancelIcon from '../assets/images/icons/anulowanie.svg'
+import phoneIcon from '../assets/images/icons/telefon.svg'
+import timeIcon from '../assets/images/icons/02-czas.svg'
+import { useI18n } from '../i18n.js'
 
-const menuOpen = ref(false)
 const submitted = ref(false)
-const nav = [['Funkcje','/funkcje'],['Dla inwestora','/dla-inwestora'],['Dla wykonawcy','/dla-wykonawcy'],['Cennik','/cennik'],['Blog','/#blog'],['O nas','/o-nas'],['Kontakt','/kontakt']]
-const contactCards = [
-  [calendarIcon,'Umów prezentację','30-minutowe spotkanie online. Pokażemy Investrę w praktyce.','Umów termin'],
-  [mailIcon,'Napisz do nas','Odpowiadamy zazwyczaj w ciągu 24 godzin.','Wyślij wiadomość'],
-  [chatIcon,'Potrzebujesz pomocy?','Skorzystaj z Centrum Pomocy lub FAQ.','Przejdź do pomocy'],
-]
-const demoBenefits = ['Zarządzanie dokumentami i komunikacją','Harmonogram prac i kontrola postępów','Budżet inwestycji i kontrola kosztów','Dziennik budowy i dokumentacja zdjęciowa','Raportowanie i historia działań']
-const faqs = [
-  ['Czy mogę korzystać z Investry za darmo?','Tak, oferujemy 14-dniowy bezpłatny okres próbny bez podawania danych karty.'],
-  ['Czy moje dane są bezpieczne?','Tak. Dane są szyfrowane, regularnie archiwizowane i przetwarzane zgodnie z RODO.'],
-  ['Czy wykonawca musi mieć konto?','Wykonawcę możesz zaprosić bezpośrednio do inwestycji i nadać mu odpowiedni dostęp.'],
-  ['Jak długo trwa wdrożenie?','Pierwszą inwestycję możesz utworzyć i skonfigurować w kilkanaście minut.'],
-  ['Czy mogę dodać kierownika budowy?','Tak, możesz zaprosić kierownika oraz ustawić jego rolę i uprawnienia.'],
-  ['Czy mogę anulować subskrypcję?','Tak, subskrypcję można anulować w dowolnym momencie bez dodatkowych opłat.'],
-]
+const { copy } = useI18n()
+const page = computed(() => copy.value.contact)
+const contactCards = computed(() => page.value.cards.map((card, index) => [[calendarIcon, mailIcon, chatIcon][index], ...card]))
 </script>
 
 <template>
   <div class="contact-page">
-    <header class="site-header">
-      <div class="header-inner">
-        <LogoMark/>
-        <nav class="desktop-nav"><RouterLink v-for="item in nav" :key="item[0]" :to="item[1]" :class="{active:item[0]==='Kontakt'}">{{item[0]}}</RouterLink></nav>
-        <div class="header-actions"><a href="#">Zaloguj się</a><a class="primary-button" href="#form">Załóż konto</a></div>
-        <button class="menu-button" :aria-expanded="menuOpen" aria-label="Otwórz menu" @click="menuOpen=!menuOpen">{{menuOpen?'×':'☰'}}</button>
-      </div>
-      <nav v-if="menuOpen" class="mobile-nav"><RouterLink v-for="item in nav" :key="item[0]" :to="item[1]" @click="menuOpen=false">{{item[0]}}</RouterLink></nav>
-    </header>
-
     <main>
       <section class="hero page-shell">
         <div class="hero-copy">
-          <nav class="breadcrumbs"><RouterLink to="/">Strona główna</RouterLink><span>›</span><span>Kontakt</span></nav>
-          <span class="eyebrow">JESTEŚMY TU DLA CIEBIE</span>
-          <h1>Masz pytania?<br>Chętnie <em>pomożemy.</em></h1>
-          <p>Pokażemy Ci, jak Investra może uporządkować komunikację, dokumentację i zarządzanie inwestycją – bez chaosu i stresu.</p>
-          <div class="hero-actions"><a class="primary-button" href="#demo"><img :src="calendarIcon" alt="">Umów prezentację</a><a class="secondary-button" href="#form"><img :src="calendarIcon" alt="">Załóż darmowe konto</a></div>
-          <div class="hero-perks"><div><img :src="calendarIcon" alt=""><p><b>14 dni za darmo</b><small>Bez zobowiązań</small></p></div><div><img :src="cardIcon" alt=""><p><b>Bez karty płatniczej</b><small>Podczas okresu próbnego</small></p></div><div><img :src="cancelIcon" alt=""><p><b>Anulujesz w każdej chwili</b><small>Bez dodatkowych opłat</small></p></div></div>
+          <nav class="breadcrumbs"><RouterLink to="/">{{copy.homeLabel}}</RouterLink><span>›</span><span>{{copy.nav.contact}}</span></nav>
+          <span class="eyebrow">{{page.eyebrow}}</span>
+          <h1>{{page.titleA}}<br><em>{{page.titleB}}</em></h1>
+          <p>{{page.intro}}</p>
+          <div class="hero-actions"><a class="primary-button" href="#demo"><img :src="calendarIcon" alt="">{{copy.bookDemo}}</a><a class="secondary-button" href="#form"><img :src="calendarIcon" alt="">{{copy.signup}}</a></div>
+          <div class="hero-perks"><div v-for="(perk,i) in page.perks" :key="perk[0]"><img :src="[calendarIcon,cardIcon,cancelIcon][i]" alt=""><p><b>{{perk[0]}}</b><small>{{perk[1]}}</small></p></div></div>
         </div>
-        <div class="hero-visual"><img :src="contactHero" alt="Konsultanci omawiający projekt inwestycji"><div class="dashboard-wrap"><DashboardMockup/></div></div>
+        <div class="hero-visual"><img :src="contactHero" :alt="page.imageAlt"><div class="dashboard-wrap"><DashboardMockup/></div></div>
       </section>
 
       <section class="contact-cards page-shell"><article v-for="card in contactCards" :key="card[1]"><img :src="card[0]" alt=""><div><h2>{{card[1]}}</h2><p>{{card[2]}}</p><a href="#form">{{card[3]}}&nbsp; →</a></div></article></section>
 
       <section id="form" class="contact-form-section page-shell">
         <form @submit.prevent="submitted=true">
-          <h2>Porozmawiajmy o Twojej inwestycji</h2><p>Wypełnij formularz, a my skontaktujemy się z Tobą tak szybko, jak to możliwe.</p>
-          <div class="form-grid"><label>Imię i nazwisko *<input required type="text" placeholder="Jan Kowalski"></label><label>E-mail *<input required type="email" placeholder="jan.kowalski@example.com"></label><label>Telefon<input type="tel" placeholder="+48 600 123 456"></label><label>Typ użytkownika *<select required><option value="">Wybierz opcję</option><option>Inwestor indywidualny</option><option>Firma wykonawcza</option><option>Kierownik budowy</option><option>Deweloper</option></select></label><label class="message-field">Wiadomość *<textarea required placeholder="Napisz, w czym możemy Ci pomóc..."></textarea></label></div>
-          <label class="consent"><input required type="checkbox">Wyrażam zgodę na przetwarzanie moich danych osobowych zgodnie z <a href="#">Polityką prywatności</a>.</label>
-          <button type="submit">{{submitted?'Wiadomość została wysłana ✓':'Wyślij wiadomość'}}</button>
+          <h2>{{page.formTitle}}</h2><p>{{page.formText}}</p>
+          <div class="form-grid"><label>{{page.name}} *<input required type="text" :placeholder="page.namePlaceholder"></label><label>{{page.email}} *<input required type="email" :placeholder="page.emailPlaceholder"></label><label>{{page.phone}}<input type="tel" placeholder="+48 600 123 456"></label><label>{{page.userType}} *<select required><option value="">{{page.choose}}</option><option v-for="type in page.userTypes" :key="type">{{type}}</option></select></label><label class="message-field">{{page.message}} *<textarea required :placeholder="page.messagePlaceholder"></textarea></label></div>
+          <label class="consent"><input required type="checkbox">{{page.consentA}} <a href="#">{{page.privacy}}</a>.</label>
+          <button type="submit">{{submitted?page.sent:page.send}}</button>
         </form>
-        <aside><h2>Skontaktuj się z nami</h2><div><img :src="mailIcon" alt=""><p><b>E-mail</b><span>kontakt@investra.pl</span></p></div><div><img :src="phoneIcon" alt=""><p><b>Telefon</b><span>+48 123 456 789</span></p></div><div><img :src="timeIcon" alt=""><p><b>Godziny kontaktu</b><span>Pon. – Pt.: 8:00 – 16:00</span></p></div><hr><div><img :src="timeIcon" alt=""><p><span>Odpowiadamy zazwyczaj w ciągu<br>24 godzin w dni robocze.</span></p></div></aside>
+        <aside><h2>{{page.contactTitle}}</h2><div><img :src="mailIcon" alt=""><p><b>{{page.email}}</b><span>kontakt@investra.pl</span></p></div><div><img :src="phoneIcon" alt=""><p><b>{{page.phone}}</b><span>+48 123 456 789</span></p></div><div><img :src="timeIcon" alt=""><p><b>{{page.hours}}</b><span>{{page.hoursValue}}</span></p></div><hr><div><img :src="timeIcon" alt=""><p><span>{{page.response}}</span></p></div></aside>
       </section>
 
       <section id="demo" class="demo page-shell">
         <div class="demo-screen"><div class="laptop"><span>INVESTRA</span><i v-for="i in 8" :key="i"></i></div></div>
-        <div class="demo-copy"><h2>Zobacz Investrę na żywo</h2><p>Podczas prezentacji online pokażemy, jak Investra może ułatwić zarządzanie Twoimi inwestycjami.</p><ul><li v-for="item in demoBenefits" :key="item">{{item}}</li></ul><a class="primary-button" href="#form">Zarezerwuj termin</a></div>
-        <div class="demo-duration"><img :src="calendarIcon" alt=""><h3>Prezentacja trwa ok. 30 minut</h3><p>Dostosujemy ją do Twoich potrzeb<br>i odpowiemy na wszystkie pytania.</p></div>
+        <div class="demo-copy"><h2>{{page.demoTitle}}</h2><p>{{page.demoText}}</p><ul><li v-for="item in page.demoBenefits" :key="item">{{item}}</li></ul><a class="primary-button" href="#form">{{page.reserve}}</a></div>
+        <div class="demo-duration"><img :src="calendarIcon" alt=""><h3>{{page.duration}}</h3><p>{{page.durationText}}</p></div>
       </section>
 
-      <section class="faq page-shell"><h2>Najczęściej zadawane pytania</h2><div class="faq-grid"><details v-for="faq in faqs" :key="faq[0]"><summary>{{faq[0]}}<span>⌄</span></summary><p>{{faq[1]}}</p></details></div></section>
+      <section class="faq page-shell"><h2>{{page.faqTitle}}</h2><div class="faq-grid"><details v-for="faq in page.faqs" :key="faq[0]"><summary>{{faq[0]}}<span>⌄</span></summary><p>{{faq[1]}}</p></details></div></section>
 
       <section class="company page-shell">
-        <div class="company-data"><h2>EDB Sp. z o.o.</h2><div><p><b>NIP:</b> 123 456 78 90</p><p><b>REGON:</b> 123456789</p><p><b>KRS:</b> 0000123456</p><p>ul. Przykładowa 123<br>00-001 Warszawa, Polska</p></div><div><p><b>E-mail:</b> kontakt@investra.pl</p><p><b>Telefon:</b> +48 123 456 789</p><p><b>Godziny kontaktu:</b><br>Pon. – Pt.: 8:00 – 16:00</p><small>Spółka zarejestrowana w Polsce</small></div></div>
-        <div class="map"><div class="map-lines"></div><span class="pin">●</span><div class="map-card"><h3>Działamy w całej Polsce</h3><p>Spotkania i prezentacje prowadzimy online.<br>Nasi klienci są w całym kraju.</p></div><small>WARSZAWA</small></div>
+        <div class="company-data"><h2>{{page.companyName}}</h2><div><p><b>NIP:</b> 123 456 78 90</p><p><b>REGON:</b> 123456789</p><p><b>KRS:</b> 0000123456</p><p><span v-for="line in page.address.split('\n')" :key="line">{{line}}<br></span></p></div><div><p><b>{{page.email}}:</b> kontakt@investra.pl</p><p><b>{{page.phone}}:</b> +48 123 456 789</p><p><b>{{page.companyHours}}</b><br>{{page.hoursValue}}</p><small>{{page.registered}}</small></div></div>
+        <div class="map"><div class="map-lines"></div><span class="pin">●</span><div class="map-card"><h3>{{page.nationwide}}</h3><p>{{page.nationwideText}}</p></div><small>{{page.warsaw}}</small></div>
       </section>
 
-      <section class="cta page-shell"><div><h2>Gotowy uporządkować swoją inwestycję?</h2><p>Załóż konto i przekonaj się, jak łatwo zarządzać budową w jednym miejscu.</p></div><div class="cta-actions"><a class="white-button" href="#">Załóż darmowe konto</a><a class="cta-outline" href="#demo">Umów prezentację</a></div><div class="cta-device"><span>INVESTRA</span><i></i><i></i><i></i><b></b></div></section>
+      <section class="cta page-shell"><div><h2>{{page.ctaTitle}}</h2><p>{{page.ctaText}}</p></div><div class="cta-actions"><a class="white-button" href="#">{{copy.signup}}</a><a class="cta-outline" href="#demo">{{copy.bookDemo}}</a></div><div class="cta-device"><span>INVESTRA</span><i></i><i></i><i></i><b></b></div></section>
     </main>
 
-    <footer><div class="footer-grid page-shell"><div class="footer-brand"><LogoMark light/><p>Investra to platforma do zarządzania inwestycjami budowlanymi, która łączy inwestora i wykonawcę w jednym miejscu.</p><div class="socials"><span>f</span><span>in</span><span>▶</span></div></div><div v-for="group in [['Produkt','Funkcje','Dla inwestora','Dla wykonawcy','Cennik','Integracje'],['Firma','O nas','Blog','Kariera'],['Pomoc','Centrum pomocy','FAQ','Kontakt'],['Prawne','Regulamin','Polityka prywatności','RODO']]" :key="group[0]"><b>{{group[0]}}</b><a v-for="item in group.slice(1)" :key="item" href="#">{{item}}</a></div></div><div class="copyright page-shell">© 2024 Investra. Wszelkie prawa zastrzeżone.</div></footer>
+    <footer><div class="footer-grid page-shell"><div class="footer-brand"><LogoMark light/><p>{{copy.footerText}}</p><div class="socials"><span>f</span><span>in</span><span>▶</span></div></div><div v-for="group in copy.footerGroups" :key="group[0]"><b>{{group[0]}}</b><a v-for="item in group.slice(1)" :key="item" href="#">{{item}}</a></div></div><div class="copyright page-shell">{{copy.copyright}}</div></footer>
   </div>
 </template>
 
@@ -92,5 +70,13 @@ const faqs = [
 @media(max-width:1100px){.header-inner{padding:0 24px}.desktop-nav{gap:16px}.header-actions{display:none}.hero h1{font-size:35px}.dashboard-wrap{left:-10px;width:450px;transform:scale(.57)}.contact-cards article{grid-template-columns:62px 1fr;padding:17px}.contact-cards img{width:58px;height:58px}.footer-grid{gap:25px}}
 @media(max-width:820px){.desktop-nav{display:none}.menu-button{display:block;border:0;background:none;font-size:25px}.mobile-nav{display:block;padding:10px 20px 18px;border-top:1px solid #eef2f7;background:#fff}.mobile-nav a{display:block;padding:9px;color:var(--ink);font-weight:700;text-decoration:none}.hero{height:auto;display:block;padding-top:20px}.hero-visual{height:390px;margin-top:15px}.dashboard-wrap{left:0;width:500px;transform:scale(.62)}.contact-cards{grid-template-columns:1fr}.contact-form-section{grid-template-columns:1fr}.demo{grid-template-columns:1fr 1fr}.demo-screen{grid-column:1/-1}.company{grid-template-columns:1fr}.cta{grid-template-columns:1fr 210px}.cta-device{display:none}.footer-grid{grid-template-columns:1.5fr repeat(2,1fr)}}
 @media(max-width:560px){.page-shell{width:calc(100% - 24px)}.header-inner{height:64px;padding:0 14px}.hero h1{font-size:33px}.hero-actions{flex-direction:column}.hero-perks{grid-template-columns:1fr;margin-top:28px}.hero-visual{height:300px}.dashboard-wrap{left:-8px;top:45px;width:430px;transform:scale(.48)}.form-grid,.faq-grid{grid-template-columns:1fr}.message-field{grid-column:auto}.contact-form-section{padding:17px;gap:20px}.contact-form-section aside{padding:20px}.demo{grid-template-columns:1fr}.demo-screen{grid-column:auto}.company-data{grid-template-columns:1fr}.company-data h2{grid-column:auto}.map-card{left:14px;width:180px}.cta{grid-template-columns:1fr;padding:23px 18px;text-align:center}.cta-actions{flex-direction:column}.footer-grid{grid-template-columns:1fr 1fr;gap:30px}.footer-brand{grid-column:1/-1}}
+
+/* The panoramic image continues beyond the content grid to the viewport edge. */
+.contact-page{overflow-x:clip}
+.hero{overflow:visible}
+.hero-visual{width:calc(100% + max(20px,(100vw - 1180px)/2));height:455px}
+.hero-visual>img{object-position:center}
+@media(max-width:820px){.hero-visual{width:calc(100% + 12px);height:390px}}
+@media(max-width:560px){.hero-visual{height:300px}}
 </style>
 
